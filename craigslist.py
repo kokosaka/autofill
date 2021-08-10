@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 import time
-import asyncio
 import data
 
 # tells program were using chrome
@@ -36,13 +35,15 @@ email_element.send_keys(data.email)
 web.find_element_by_xpath('//*[@id="new-edit"]/div/div[3]/div/button').click()
 web.find_element_by_xpath('//*[@id="leafletForm"]/button').click()
 
-
 for image in data.image:
     web.find_element_by_xpath('//input[@type="file"]').send_keys(image)
 
 image_count = len(data.image)
-time.sleep(5)
-text = len(web.find_elements_by_class_name("imgcount"))
-print(text)
-# '/html/body/article/section/ul/li[1]/span/text()[1]'))
-# web.find_element_by_xpath('/html/body/article/section/form/button').click()
+
+while len(web.find_elements_by_class_name("imgbox")) <= image_count:
+    print('waiting', len(web.find_elements_by_class_name("imgbox")))
+    time.sleep(1)
+    if len(web.find_elements_by_class_name("loading")) == 0:
+        web.find_element_by_xpath(
+            '/html/body/article/section/form/button').click()
+        break
